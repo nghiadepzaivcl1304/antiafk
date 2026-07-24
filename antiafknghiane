@@ -1,163 +1,159 @@
--- Obfuscated Anti-AFK Script by Nghia
-local _0x1 = string.char
-local _0x2 = string.sub
-local _0x3 = table.concat
-local _0x4 = function(_0x5)
-    local _0x6 = {}
-    for _0x7 = 1, #_0x5, 2 do
-        _0x6[#_0x6 + 1] = _0x1(tonumber(_0x2(_0x5, _0x7, _0x7 + 1), 16))
-    end
-    return _0x3(_0x6)
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local VirtualUser = game:GetService("VirtualUser")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local LocalPlayer = Players.LocalPlayer
+local parentGui = (gethui and gethui()) or CoreGui
+
+-- Xóa UI cũ nếu có
+if parentGui:FindFirstChild("AntiAFK_UI_Fancy") then
+    parentGui.AntiAFK_UI_Fancy:Destroy()
 end
 
-local _S = function(hex) return _0x4(hex) end
+-- Tạo ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AntiAFK_UI_Fancy"
+screenGui.Parent = parentGui
 
-local _G_SERVICE = function(s) return game:GetService(s) end
+-- Khung chính (Main Frame)
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(0, 220, 0, 120)
+mainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.ClipsDescendants = true
+mainFrame.Parent = screenGui
 
-local _C = _G_SERVICE(_S("436F7265477569"))
-local _P = _G_SERVICE(_S("506C6179657273"))
-local _V = _G_SERVICE(_S("5669727475616C55736572"))
-local _U = _G_SERVICE(_S("55736572496E70757453657276696365"))
-local _T = _G_SERVICE(_S("547765656E53657276696365"))
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 10)
+mainCorner.Parent = mainFrame
 
-local _LP = _P.LocalPlayer
-local _PG = (gethui and gethui()) or _C
+-- Viền phát sáng cho Menu (UIStroke)
+local mainStroke = Instance.new("UIStroke")
+mainStroke.Color = Color3.fromRGB(0, 170, 255)
+mainStroke.Thickness = 1.5
+mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+mainStroke.Parent = mainFrame
 
-local _UI_NAME = _S("416E746941464B5F55495F46616E6379")
+-- Hình ảnh nền (Background Image - hoa văn Cyberpunk/Abstract)
+local bgImage = Instance.new("ImageLabel")
+bgImage.Name = "BackgroundImage"
+bgImage.Size = UDim2.new(1, 0, 1, 0)
+bgImage.BackgroundTransparency = 1
+bgImage.Image = "rbxassetid://6071575925" -- ID hình nền abstract 
+bgImage.ImageTransparency = 0.85
+bgImage.ScaleType = Enum.ScaleType.Crop
+bgImage.Parent = mainFrame
 
-if _PG:FindFirstChild(_UI_NAME) then
-    _PG[_UI_NAME]:Destroy()
-end
+-- Title Bar (Thanh tiêu đề)
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 35)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "⚡ ANTI-AFK SYSTEM by Nghia ⚡"
+titleLabel.TextColor3 = Color3.fromRGB(0, 225, 255)
+titleLabel.TextSize = 13
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Parent = mainFrame
 
-local _SG = Instance.new(_S("53637265656E477569"))
-_SG.Name = _UI_NAME
-_SG.Parent = _PG
+-- Nút Bật / Tắt
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0.85, 0, 0, 40)
+toggleButton.Position = UDim2.new(0.075, 0, 0.45, 0)
+toggleButton.BackgroundColor3 = Color3.fromRGB(200, 40, 40)
+toggleButton.Text = "TRẠNG THÁI: OFF"
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.TextSize = 13
+toggleButton.Font = Enum.Font.GothamBold
+toggleButton.AutoButtonColor = false
+toggleButton.Parent = mainFrame
 
-local _MF = Instance.new(_S("4672616D65"))
-_MF.Name = _S("4D61696E4672616D65")
-_MF.Size = UDim2.new(0, 220, 0, 120)
-_MF.Position = UDim2.new(0.05, 0, 0.3, 0)
-_MF.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-_MF.BorderSizePixel = 0
-_MF.Active = true
-_MF.Draggable = true
-_MF.ClipsDescendants = true
-_MF.Parent = _SG
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 8)
+buttonCorner.Parent = toggleButton
 
-local _MC = Instance.new(_S("5549436F726E6572"))
-_MC.CornerRadius = UDim.new(0, 10)
-_MC.Parent = _MF
-
-local _MS = Instance.new(_S("55495374726F6B65"))
-_MS.Color = Color3.fromRGB(0, 170, 255)
-_MS.Thickness = 1.5
-_MS.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-_MS.Parent = _MF
-
-local _BG = Instance.new(_S("496D6167654C6162656C"))
-_BG.Name = _S("4261636B67726F756E64496D616765")
-_BG.Size = UDim2.new(1, 0, 1, 0)
-_BG.BackgroundTransparency = 1
-_BG.Image = _S("726278617373657469643A2F2F36303731353735393235")
-_BG.ImageTransparency = 0.85
-_BG.ScaleType = Enum.ScaleType.Crop
-_BG.Parent = _MF
-
-local _TL = Instance.new(_S("546578744C6162656C"))
-_TL.Size = UDim2.new(1, 0, 0, 35)
-_TL.BackgroundTransparency = 1
-_TL.Text = _S("E29A1120414E54492D41464B2053595354454D206279204E6768696120E29A11")
-_TL.TextColor3 = Color3.fromRGB(0, 225, 255)
-_TL.TextSize = 13
-_TL.Font = Enum.Font.GothamBold
-_TL.Parent = _MF
-
-local _TB = Instance.new(_S("54657874427574746F6E"))
-_TB.Size = UDim2.new(0.85, 0, 0, 40)
-_TB.Position = UDim2.new(0.075, 0, 0.45, 0)
-_TB.BackgroundColor3 = Color3.fromRGB(200, 40, 40)
-_TB.Text = _S("5452E1BAA04E47205448C3813A204F4646")
-_TB.TextColor3 = Color3.fromRGB(255, 255, 255)
-_TB.TextSize = 13
-_TB.Font = Enum.Font.GothamBold
-_TB.AutoButtonColor = false
-_TB.Parent = _MF
-
-local _BC = Instance.new(_S("5549436F726E6572"))
-_BC.CornerRadius = UDim.new(0, 8)
-_BC.Parent = _TB
-
-local _BG2 = Instance.new(_S("55494772616469656E74"))
-_BG2.Color = ColorSequence.new({
+-- Gradient chuyển màu cho Nút
+local buttonGradient = Instance.new("UIGradient")
+buttonGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 80, 80)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 20, 20))
 })
-_BG2.Rotation = 45
-_BG2.Parent = _TB
+buttonGradient.Rotation = 45
+buttonGradient.Parent = toggleButton
 
-local _SL = Instance.new(_S("546578744C6162656C"))
-_SL.Size = UDim2.new(1, 0, 0, 20)
-_SL.Position = UDim2.new(0, 0, 0.82, 0)
-_SL.BackgroundTransparency = 1
-_SL.Text = _S("4E68E1BAA56E205B4B5D20C491E1BAA320E1BAA36E2F6869E1BA876E206D656E75")
-_SL.TextColor3 = Color3.fromRGB(150, 150, 150)
-_SL.TextSize = 10
-_SL.Font = Enum.Font.Gotham
-_SL.Parent = _MF
+-- Dòng chữ hướng dẫn phím tắt
+local subLabel = Instance.new("TextLabel")
+subLabel.Size = UDim2.new(1, 0, 0, 20)
+subLabel.Position = UDim2.new(0, 0, 0.82, 0)
+subLabel.BackgroundTransparency = 1
+subLabel.Text = "Nhấn [K] để ẩn/hiện menu"
+subLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+subLabel.TextSize = 10
+subLabel.Font = Enum.Font.Gotham
+subLabel.Parent = mainFrame
 
-local _STATE = false
+-- Logic Bật / Tắt + Hiệu ứng đổi màu mượt (Tween)
+local isEnabled = false
 
-_TB.MouseButton1Click:Connect(function()
-    _STATE = not _STATE
-    if _STATE then
-        _TB.Text = _S("5452E1BAA04E47205448C3813A204F4E")
-        _BG2.Color = ColorSequence.new({
+toggleButton.MouseButton1Click:Connect(function()
+    isEnabled = not isEnabled
+    
+    if isEnabled then
+        toggleButton.Text = "TRẠNG THÁI: ON"
+        -- Đổi Gradient sang màu Xanh
+        buttonGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 255, 120)),
             ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 160, 60))
         })
-        _MS.Color = Color3.fromRGB(50, 255, 100)
+        mainStroke.Color = Color3.fromRGB(50, 255, 100) -- Viền đổi sang xanh
     else
-        _TB.Text = _S("5452E1BAA04E47205448C3813A204F4646")
-        _BG2.Color = ColorSequence.new({
+        toggleButton.Text = "TRẠNG THÁI: OFF"
+        -- Đổi Gradient sang màu Đỏ
+        buttonGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 80, 80)),
             ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 20, 20))
         })
-        _MS.Color = Color3.fromRGB(0, 170, 255)
+        mainStroke.Color = Color3.fromRGB(0, 170, 255) -- Viền trở lại xanh dương
     end
 end)
 
+-- Vòng lặp Anti-AFK
 task.spawn(function()
     while true do
         task.wait(5)
-        if _STATE then
+        if isEnabled then
             pcall(function()
-                local _char = _LP.Character
-                if _char then
-                    local _hum = _char:FindFirstChildOfClass(_S("48756D616E6F6964"))
-                    if _hum then
-                        _hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
+                local character = LocalPlayer.Character
+                if character and character:FindFirstChildOfClass("Humanoid") then
+                    character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
                 end
             end)
+            
             pcall(function()
-                _V:CaptureController()
-                _V:ClickButton2(Vector2.new(0, 0))
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new(0, 0))
             end)
         end
     end
 end)
 
-_LP.Idled:Connect(function()
-    if _STATE then
+-- Phương án dự phòng với Idled
+LocalPlayer.Idled:Connect(function()
+    if isEnabled then
         pcall(function()
-            _V:CaptureController()
-            _V:ClickButton2(Vector2.new(0, 0))
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new(0, 0))
         end)
     end
 end)
 
-_U.InputBegan:Connect(function(_in, _gp)
-    if not _gp and _in.KeyCode == Enum.KeyCode.K then
-        _MF.Visible = not _MF.Visible
+-- Phím K để Ẩn/Hiện
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.K then
+        mainFrame.Visible = not mainFrame.Visible
     end
 end)
